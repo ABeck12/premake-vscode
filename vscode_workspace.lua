@@ -22,18 +22,30 @@ function m.generate(wks)
 
             local prjpath = path.getrelative(prj.workspace.location, prj.location)
             p.push('{')
-            p.w('"path": "%s"', prjpath)
+            p.w('"name": "%s",', prj.name)
+            p.w('"path": "%s",', prjpath)
             p.pop('},')
         end,
     })
-
+    
     -- HACK(Peter): Hack around the tasks not being picked up when workspace is opened
     local prjpath = path.getrelative(wks.location, "Tasks")
     p.push('{')
     p.w('"path": "%s"', prjpath)
     p.pop('}')
-
+    
     p.pop(']')
+
+    p.push(',"settings": {')
+
+    p.w('"files.exclude": {')
+    p.w('"**/*.vcxproj*": true,')
+    p.w('"**/.vscode": true,')
+    p.pop('}')
+    
+    p.pop('}')
+
+
     p.pop('}')
 end
 
